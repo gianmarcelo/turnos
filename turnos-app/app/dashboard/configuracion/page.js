@@ -118,7 +118,9 @@ export default function Configuracion() {
           <li className="mb-4"><Link href="/dashboard">Inicio</Link></li>
           <li className="mb-4"><Link href="/dashboard/estadisticas">Estadísticas</Link></li>
           <li className="mb-4"><Link href="/dashboard/configuracion">Configuración</Link></li>
-          <li className="mb-4"><Link href="/dashboard/estado-cuenta">Seguridad y pagos</Link></li>
+          <li className="mb-4"><Link href="/dashboard/estado-cuenta">Seguridad y Compras</Link></li>
+          <li className="mb-4"><Link href="/dashboard/historial">Historial de transacciones</Link></li>
+          <li className="mb-4"><Link href="/dashboard/pagos">Pagos</Link></li>
           <li className="mb-4"><Link href="/dashboard/acerca">Acerca de</Link></li>
           <li className="mt-8">
             <button onClick={handleLogout} className="flex items-center bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">

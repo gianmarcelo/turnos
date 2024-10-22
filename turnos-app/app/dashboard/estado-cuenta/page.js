@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { signOut, useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import 'tailwindcss/tailwind.css';
+import crypto from 'crypto';
 
 const handleLogout = async () => {
   try {
@@ -161,15 +162,23 @@ export default function EstadoCuenta() {
     const total = carrito.reduce((acc, item) => acc + item.precio, 0);
 
     try {
+      let descripcion;
+      if (carrito[0].tipo === 'plan') {
+          descripcion = `Compra de ${carrito[0].tipo} ${carrito[0].nombre}.`;
+      } else {
+          descripcion = `Compra de ${carrito[0].cantidad} créditos`;
+      }
+      const referencecode = `Ref-${Date.now()}-${crypto.randomBytes(4).toString('hex')}`;
       const response = await fetch('/api/pagos/payU', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          items: carrito,
           total: total,
-          buyerEmail: session?.user?.email || ''
+          buyerEmail: session?.user?.email || '',
+          referenceCode: referencecode,
+          description: descripcion
         }),
       });
 
@@ -199,6 +208,8 @@ export default function EstadoCuenta() {
           <li className="mb-4"><Link href="/dashboard/estadisticas">Estadísticas</Link></li>
           <li className="mb-4"><Link href="/dashboard/configuracion">Configuración</Link></li>
           <li className="mb-4"><Link href="/dashboard/estado-cuenta">Seguridad y Compras</Link></li>
+          <li className="mb-4"><Link href="/dashboard/historial">Historial de transacciones</Link></li>
+          <li className="mb-4"><Link href="/dashboard/pagos">Pagos</Link></li>
           <li className="mb-4"><Link href="/dashboard/acerca">Acerca de</Link></li>
           <li className="mt-8">
             <button onClick={handleLogout} className="flex items-center bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">

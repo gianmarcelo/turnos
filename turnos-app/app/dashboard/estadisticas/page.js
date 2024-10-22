@@ -39,7 +39,7 @@ export default function Estadisticas() {
     labels: mensajesPorDia.map((item) => item.day),
     datasets: [
       {
-        label: "Mensajes por Día",
+        label: "Pedidos por Día",
         data: mensajesPorDia.map((item) => item.total_messages),
         borderColor: "rgba(75, 192, 192, 1)",
         backgroundColor: "rgba(75, 192, 192, 0.2)",
@@ -53,7 +53,7 @@ export default function Estadisticas() {
     labels: mensajesPorMes.map((item) => item.month.slice(0, 7)), // Solo mostrar año y mes
     datasets: [
       {
-        label: "Mensajes por Mes",
+        label: "Pedidos por Mes",
         data: mensajesPorMes.map((item) => item.total_messages),
         borderColor: "rgba(54, 162, 235, 1)",
         backgroundColor: "rgba(54, 162, 235, 0.2)",
@@ -67,7 +67,7 @@ export default function Estadisticas() {
     labels: mensajesPorAno.map((item) => item.year),
     datasets: [
       {
-        label: "Mensajes por Año",
+        label: "Pedidos por Año",
         data: mensajesPorAno.map((item) => item.total_messages),
         borderColor: "rgba(255, 206, 86, 1)",
         backgroundColor: "rgba(255, 206, 86, 0.2)",
@@ -81,7 +81,7 @@ export default function Estadisticas() {
     labels: horasPico.map((item) => `${item.hour}:00`), // Mostrar la hora con formato de 24h
     datasets: [
       {
-        label: "Mensajes por Hora",
+        label: "Pedidos por Hora",
         data: horasPico.map((item) => item.total_messages),
         borderColor: "rgba(255, 99, 132, 1)",
         backgroundColor: "rgba(255, 99, 132, 0.2)",
@@ -111,7 +111,9 @@ export default function Estadisticas() {
           <li className="mb-4"><Link href="/dashboard">Inicio</Link></li>
           <li className="mb-4"><a href="/dashboard/estadisticas">Estadísticas</a></li>
           <li className="mb-4"><a href="/dashboard/configuracion">Configuración</a></li>
-          <li className="mb-4"><a href="/dashboard/estado-cuenta">Seguridad y pagos</a></li>
+          <li className="mb-4"><a href="/dashboard/estado-cuenta">Seguridad y Compras</a></li>
+          <li className="mb-4"><Link href="/dashboard/historial">Historial de transacciones</Link></li>
+          <li className="mb-4"><Link href="/dashboard/pagos">Pagos</Link></li>
           <li className="mb-4"><a href="/dashboard/acerca">Acerca de</a></li>
           <li className="mt-8">
             <button onClick={handleLogout} className="flex items-center bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">

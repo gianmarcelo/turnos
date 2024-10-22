@@ -1,4 +1,3 @@
-// Archivo: /app/api/pagos/payU/respuesta/route.js
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route'; // Asegúrate de que este sea el path correcto
@@ -39,16 +38,18 @@ export async function GET(request) {
     const referenceCode = searchParams.get('referenceCode');
     const transactionId = searchParams.get('transactionId');
     const paymentMethod = searchParams.get('lapPaymentMethod');
-    const paymentDate = new Date().toISOString();
+    const fecha = new Date();
+    const paymentDate = new Date(fecha - fecha.getTimezoneOffset() * 60000).toISOString();
+    const descripcion = searchParams.get('description');
     let amount = searchParams.get('TX_VALUE');
     amount = parseInt(amount);
 
     // 4. Actualizar la base de datos
     await client.query(
       `INSERT INTO transacciones_${idCliente} 
-        (fechatransaccion, estadotransaccion, idtransaccion, referencia, total, metodopago) 
-       VALUES ($1, $2, $3, $4, $5, $6)`,
-      [paymentDate, transactionState, transactionId, referenceCode, amount, paymentMethod]
+        (fechatransaccion, estadotransaccion, idtransaccion, referencia, total, metodopago, descripcion) 
+       VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+      [paymentDate, transactionState, transactionId, referenceCode, amount, paymentMethod,descripcion]
     );
 
     // Formatear el monto en COP
