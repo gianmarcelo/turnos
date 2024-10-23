@@ -20,7 +20,7 @@ export async function verifyMonthlyPayments() {
   const clientes = await pool.query(query);
 
   for (const cliente of clientes.rows) {
-    const reference = `Pago mensualidad ${currentMonth} del plan ${cliente.tipoplan} - ${cliente.name}`;
+    const reference = `Pago mensualidad ${currentMonth} del plan ${cliente.tipoplan} MiTurno - ${cliente.name}`;
     const transaccionQuery = `
       SELECT estadotransaccion 
       FROM transacciones_${clientes.rows[0].idcliente} 

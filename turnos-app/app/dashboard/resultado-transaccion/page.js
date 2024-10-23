@@ -57,7 +57,7 @@ export default function ResultadoTransaccion() {
           <li className="mb-4"><Link href="/dashboard/estado-cuenta">Seguridad y Compras</Link></li>
           <li className="mb-4"><Link href="/dashboard/historial">Historial de transacciones</Link></li>
           <li className="mb-4"><Link href="/dashboard/pagos">Pagos</Link></li>
-          <li className="mb-4"><Link href="/dashboard/acerca">Acerca de</Link></li>
+          <li className="mb-4"><Link href="/dashboard/contactanos">Contáctanos</Link></li>
           <li className="mt-8">
             <button onClick={handleLogout} className="flex items-center bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
             <img src="/images/logout-icon.png" alt="Cerrar sesión" className="w-6 h-6 mr-2" />
@@ -74,7 +74,7 @@ export default function ResultadoTransaccion() {
           <ul className="mt-4">
           <li><strong>Fecha de Transacción:</strong> {fechaPago}</li>
             <li><strong>Referencia:</strong> {referencia}</li>
-            <li><strong>Valor:</strong> {monto}</li>
+            <li><strong>Valor:</strong> {monto} COP</li>
             <li><strong>ID Transacción:</strong> {transaccion}</li>
             <li><strong>Método de Pago:</strong> {metodoPago}</li>
           </ul>

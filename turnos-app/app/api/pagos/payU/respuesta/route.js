@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth/next';
-import { authOptions } from '@/app/api/auth/[...nextauth]/route'; // Asegúrate de que este sea el path correcto
+import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { Pool } from 'pg';
+import crypto from 'crypto';
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL_CLIENTES,
@@ -14,11 +15,12 @@ export async function GET(request) {
   if (!session) {
     return new Response(JSON.stringify({ error: 'No estás autenticado' }), { status: 401 });
   }
+
   const email = session?.user?.email;
   const client = await pool.connect();
 
   try {
-    // 1. Obtener id_cliente de la base de datos
+    // Obtener el id_cliente de la base de datos
     const res = await client.query(`SELECT id_cliente FROM clientes WHERE email = $1`, [email]);
     const user = res.rows[0];
 
@@ -33,26 +35,30 @@ export async function GET(request) {
     }
 
     const { searchParams } = new URL(request.url);
-  
     const transactionState = searchParams.get('transactionState');
     const referenceCode = searchParams.get('referenceCode');
-    const transactionId = searchParams.get('transactionId');
+    let amount = parseFloat(searchParams.get('TX_VALUE')).toFixed(1); // Redondeo a 1 decimal como indica la documentación
     const paymentMethod = searchParams.get('lapPaymentMethod');
-    const fecha = new Date();
-    const paymentDate = new Date(fecha - fecha.getTimezoneOffset() * 60000).toISOString();
-    const descripcion = searchParams.get('description');
-    let amount = searchParams.get('TX_VALUE');
-    amount = parseInt(amount);
+    const transactionId = searchParams.get('transactionId');
+    const description = searchParams.get('description');
+    //const fecha = new Date();
+    //const paymentDate = new Date(fecha - fecha.getTimezoneOffset() * 60000).toISOString();
+    const paymentDate = searchParams.get('processingDate');
+    const currency = 'COP';
 
-    // 4. Actualizar la base de datos
-    await client.query(
-      `INSERT INTO transacciones_${idCliente} 
-        (fechatransaccion, estadotransaccion, idtransaccion, referencia, total, metodopago, descripcion) 
-       VALUES ($1, $2, $3, $4, $5, $6, $7)`,
-      [paymentDate, transactionState, transactionId, referenceCode, amount, paymentMethod,descripcion]
-    );
+    // Validar firma
+    const merchantId = searchParams.get('merchantId');
+    const apiKey = process.env.API_KEY;
+    const signatureReceived = searchParams.get('signature');
+    const localSignature = crypto
+      .createHash('md5')
+      .update(`${apiKey}~${merchantId}~${referenceCode}~${amount}~${currency}~${transactionState}`)
+      .digest('hex');
 
-    // Formatear el monto en COP
+    if (localSignature !== signatureReceived) {
+      return new Response(JSON.stringify({ error: 'Firma inválida' }), { status: 400 });
+    }
+
     const formattedAmount = parseFloat(amount).toLocaleString('es-CO', {
       style: 'currency',
       currency: 'COP',
@@ -60,9 +66,8 @@ export async function GET(request) {
 
     // Obtener la URL base del host
     const host = request.headers.get('host');
-    const protocol = request.headers.get('x-forwarded-proto') || 'http'; // Si está en producción, puede usar https
+    const protocol = request.headers.get('x-forwarded-proto') || 'http';
 
-    // Construir URL absoluta para la redirección
     const redirectUrl = `${protocol}://${host}/dashboard/resultado-transaccion?estado=${transactionState}&referencia=${referenceCode}&monto=${formattedAmount}&transaccion=${transactionId}&metodoPago=${paymentMethod}&fechaPago=${paymentDate}`;
 
     // Redirigir a la página de resultado con la URL completa

@@ -115,7 +115,7 @@ export default function HistorialTransacciones() {
             <li className="mb-4"><Link href="/dashboard/estado-cuenta">Seguridad y Compras</Link></li>
             <li className="mb-4"><Link href="/dashboard/historial">Historial de transacciones</Link></li>
             <li className="mb-4"><Link href="/dashboard/pagos">Pagos</Link></li>
-            <li className="mb-4"><Link href="/dashboard/acerca">Acerca de</Link></li>
+            <li className="mb-4"><Link href="/dashboard/contactanos">Contáctanos</Link></li>
             <li className="mt-8">
               <button onClick={handleLogout} className="flex items-center bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
                 <img src="/images/logout-icon.png" alt="Cerrar sesión" className="w-6 h-6 mr-2" />
@@ -186,21 +186,22 @@ export default function HistorialTransacciones() {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {filtrarTransacciones.length > 0 ? (
-                    filtrarTransacciones.map((transaccion, index) => (
-                      <tr key={index}>
-                        <td className="px-6 py-4 whitespace-nowrap">{formatearFecha(transaccion.fechatransaccion)}</td>
-                        <td className="px-6 py-4 whitespace-nowrap">{convertTransactionState(transaccion.estadotransaccion)}</td>
-                        <td className="px-6 py-4 whitespace-nowrap">{transaccion.descripcion}</td>
-                        <td className="px-6 py-4 whitespace-nowrap">{formattedAmount(transaccion.total)}</td>
-                      </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td colSpan="4" className="text-center text-gray-500">No se encontraron transacciones.</td>
-                    </tr>
-                  )}
-                </tbody>
+                    {filtrarTransacciones.length > 0 ? (
+                        filtrarTransacciones.map((transaccion, index) => (
+                        <tr key={index}>
+                            <td className="px-6 py-4 whitespace-nowrap">{formatearFecha(transaccion.fechatransaccion)}</td>
+                            <td className="px-6 py-4 whitespace-nowrap">{convertTransactionState(transaccion.estadotransaccion)}</td>
+                            {/* Ajuste para la columna de descripción */}
+                            <td className="px-6 py-4 max-w-xs break-words">{transaccion.descripcion}</td>
+                            <td className="px-6 py-4 whitespace-nowrap">{formattedAmount(transaccion.total)}</td>
+                        </tr>
+                        ))
+                    ) : (
+                        <tr>
+                        <td colSpan="4" className="text-center text-gray-500">No se encontraron transacciones.</td>
+                        </tr>
+                    )}
+                    </tbody>        
               </table>
             )}
           </div>

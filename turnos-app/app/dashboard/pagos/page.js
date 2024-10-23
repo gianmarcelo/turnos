@@ -79,7 +79,7 @@ const Pagos = () => {
                     <li className="mb-4"><Link href="/dashboard/estado-cuenta">Seguridad y Compras</Link></li>
                     <li className="mb-4"><Link href="/dashboard/historial">Historial de transacciones</Link></li>
                     <li className="mb-4"><Link href="/dashboard/pagos">Pagos</Link></li>
-                    <li className="mb-4"><Link href="/dashboard/acerca">Acerca de</Link></li>
+                    <li className="mb-4"><Link href="/dashboard/contactanos">Contáctanos</Link></li>
                     <li className="mt-8">
                         <button onClick={handleLogout} className="flex items-center bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
                             <img src="/images/logout-icon.png" alt="Cerrar sesión" className="w-6 h-6 mr-2" />
@@ -101,7 +101,7 @@ const Pagos = () => {
                 ) : (
                     <>
                         <p>Tipo de plan: {planDetails?.tipoplan}</p>
-                        <p>Valor a pagar: {planDetails?.valor} COP</p>
+                        <p>Valor a pagar: ${planDetails?.valor} COP</p>
                         <p>Descripción del pago: {planDetails?.description}</p>
                         <button
                             onClick={handlePayment}
