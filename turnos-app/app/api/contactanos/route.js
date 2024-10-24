@@ -1,35 +1,43 @@
 import nodemailer from 'nodemailer';
+import mg from 'nodemailer-mailgun-transport';
 
-export default async function handler(req, res) {
-  if (req.method === 'POST') {
-    const { email, subject, message } = req.body;
+export const POST = async (req, res) => {
+  const { email, subject, message } = await req.json();
 
-    if (!email || !subject || !message) {
-      return res.status(400).json({ error: 'Todos los campos son obligatorios' });
-    }
-
-    try {
-      let transporter = nodemailer.createTransport({
-        service: 'Gmail', // Puedes cambiarlo por tu servicio de email
-        auth: {
-          user: process.env.EMAIL_USER, // Tu correo electrónico
-          pass: process.env.EMAIL_PASSWORD, // Tu contraseña de correo electrónico
-        },
-      });
-
-      await transporter.sendMail({
-        from: email, // El email del usuario
-        to: process.env.EMAIL_TO, // Tu correo donde recibirás los mensajes
-        subject: `Contacto: ${subject}`,
-        text: message,
-      });
-
-      return res.status(200).json({ success: 'Mensaje enviado con éxito' });
-    } catch (error) {
-      return res.status(500).json({ error: 'Error al enviar el mensaje' });
-    }
-  } else {
-    res.setHeader('Allow', ['POST']);
-    res.status(405).end(`Method ${req.method} Not Allowed`);
+  // Validar los campos
+  if (!email || !subject || !message) {
+    return new Response(JSON.stringify({ error: 'Todos los campos son obligatorios' }), {
+      status: 400,
+    });
   }
-}
+
+  // Configurar transporte de Nodemailer con Mailgun
+  const auth = {
+    auth: {
+      api_key: process.env.MAILGUN_API_KEY,
+      domain: process.env.MAILGUN_DOMAIN,
+    },
+  };
+
+  const transporter = nodemailer.createTransport(mg(auth));
+
+  try {
+    // Enviar el correo
+    await transporter.sendMail({
+      from: process.env.EMAIL_FROM, // De quién es el correo
+      to: process.env.EMAIL_TO, // A quién va el correo
+      subject: `Contacto: ${subject}`,
+      text: message,
+      replyTo: email, // El correo del usuario
+    });
+
+    return new Response(JSON.stringify({ success: 'Mensaje enviado con éxito' }), {
+      status: 200,
+    });
+  } catch (error) {
+    console.error('Error al enviar el correo:', error);
+    return new Response(JSON.stringify({ error: 'Error al enviar el mensaje' }), {
+      status: 500,
+    });
+  }
+};
