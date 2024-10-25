@@ -1,12 +1,12 @@
 import bcrypt from 'bcryptjs';
-import { pool } from '../../../db';
+import { getPool } from '../../../db';
 
 export async function POST(req) {
   try {
     const { mobileNumber, otp } = await req.json();
 
     // Buscar el OTP almacenado en la base de datos
-    const result = await pool.query(
+    const result = await getPool.query(
       'SELECT onetimepassword FROM clientes WHERE numberclient = $1',
       [mobileNumber]
     );
@@ -22,7 +22,7 @@ export async function POST(req) {
 
     // Comparar el OTP proporcionado con el almacenado utilizando bcrypt
     const isMatch = await bcrypt.compare(otp, storedOtp);
-
+    
     if (isMatch) {
       // Eliminar el OTP de la base de datos después de la verificación exitosa
       

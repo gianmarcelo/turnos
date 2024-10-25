@@ -1,9 +1,6 @@
 {
-  "/dashboard/estado-cuenta/page": "app/dashboard/estado-cuenta/page.js",
+  "/dashboard/page": "app/dashboard/page.js",
   "/auth/signin/page": "app/auth/signin/page.js",
   "/api/auth/[...nextauth]/route": "app/api/auth/[...nextauth]/route.js",
-  "/api/clientes/obtener-tarifas/route": "app/api/clientes/obtener-tarifas/route.js",
-  "/dashboard/pagos/page": "app/dashboard/pagos/page.js",
-  "/dashboard/page": "app/dashboard/page.js",
-  "/api/clientes/obtener-plan/route": "app/api/clientes/obtener-plan/route.js"
+  "/api/auth/logout/route": "app/api/auth/logout/route.js"
 }
